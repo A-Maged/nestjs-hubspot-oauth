@@ -1,12 +1,23 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Controller, Get, Req } from '@nestjs/common';
+
+import { Request } from 'express';
+import { Client as hubspotClient } from '@hubspot/api-client';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  @Get('protected')
+  async protectedRoute(@Req() req: Request) {
+    try {
+      const client = new hubspotClient({
+        accessToken: req.user?.hubspot.accessToken as string,
+      });
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+      const data = await client.crm.contacts.getAll(1);
+
+      return data;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
   }
 }
