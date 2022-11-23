@@ -13,8 +13,8 @@ export class AppController {
     return 'healthy';
   }
 
-  @Get('protected')
-  async protectedRoute(@Req() req: Request) {
+  @Get('contacts')
+  async listContacts(@Req() req: Request) {
     try {
       const client = new hubspotClient({
         accessToken: req.user?.hubspot.accessToken as string,
