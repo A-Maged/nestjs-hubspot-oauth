@@ -1,10 +1,18 @@
-import { Controller, Get, Req } from '@nestjs/common';
+import { Controller, Get, HttpCode, Req } from '@nestjs/common';
 
 import { Request } from 'express';
 import { Client as hubspotClient } from '@hubspot/api-client';
+import { Public } from './auth/decorators/Public';
 
 @Controller()
 export class AppController {
+  @Get('health-check')
+  @Public()
+  @HttpCode(200)
+  health() {
+    return 'healthy';
+  }
+
   @Get('protected')
   async protectedRoute(@Req() req: Request) {
     try {
